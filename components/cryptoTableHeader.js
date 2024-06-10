@@ -24,14 +24,10 @@ const TableHeader = () => {
           7d %
         </th>
         <th scope="col" className="px-6 py-3">
-          <div className="flex items-center">
-            <p className="mr-2">Volume(24h)</p> <Info />
-          </div>
+          <p className="mr-2">Volume(24h)</p>
         </th>
         <th scope="col" className="px-6 py-3">
-          <div className="flex items-center">
-            <p className="mr-2">Mkt Cap</p> <Info />
-          </div>
+          <p className="mr-2">Mkt Cap</p>
         </th>
         <th scope="col" className="px-6 py-3">
           Last 7 days

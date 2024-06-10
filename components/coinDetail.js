@@ -22,6 +22,12 @@ const CoinDetail = ({ coinData }) => {
     dRate,
     marketCapValue,
     fullyDilutedValuation,
+    totalVolume,
+    circulatingSupply,
+    totalSupply,
+    maxSupply,
+    high24h,
+    low24h,
   } = coinData;
   return (
     <div className="coinDetail-section">
@@ -51,6 +57,16 @@ const CoinDetail = ({ coinData }) => {
             </td>
           </div>
         </div>
+        <div className="flex flex-col items-start">
+          <div className="progress-container">
+            <div className="progress-bar"></div>
+          </div>
+          <div className="flex justify-between interval">
+            <div className="text-sm">${low24h}</div>
+            <div className="text-sm">24h Range</div>
+            <div className="text-sm">${high24h}</div>
+          </div>
+        </div>
         <div className="detail-item-2">
           <div className="border-b">
             <div className="flex items-center">
@@ -60,8 +76,24 @@ const CoinDetail = ({ coinData }) => {
             <div>${marketCapValue}</div>
           </div>
           <div className="border-b">
-            <div>fully Diluted Valuation</div>
+            <div>Fully Diluted Valuation</div>
             <div>${fullyDilutedValuation}</div>
+          </div>
+          <div className="border-b">
+            <div>24 Hour Trading Vol</div>
+            <div>${totalVolume}</div>
+          </div>
+          <div className="border-b">
+            <div>Circulating Supply</div>
+            <div>${circulatingSupply}</div>
+          </div>
+          <div className="border-b">
+            <div>Total Supply</div>
+            <div>${totalSupply}</div>
+          </div>
+          <div className="border-b">
+            <div>Max Supply</div>
+            <div>${maxSupply}</div>
           </div>
         </div>
       </div>

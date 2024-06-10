@@ -2,8 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-.rounded-table {
-  border-radius: 8px;
+.progress-container {
+  width: 400px;
+  background-color: #ddd;
+  border-radius: 25px;
   overflow: hidden;
-  border-collapse: separate;
+}
+
+.progress-bar {
+  height: 6px;
+  background: linear-gradient(to right, green 0%, yellow 50%, red 100%);
+  border-radius: 25px 0 0 25px;
+}
+
+.interval {
+  width: 400px;
 }

@@ -23,7 +23,6 @@ export default async function getCoins(req, res) {
         "https://assets.coingecko.com/coins/images/",
         ""
       )[0];
-      //console.log(coin.);
 
       coins.push({
         id: coin.id,
@@ -44,6 +43,13 @@ export default async function getCoins(req, res) {
         large_image: coin.image,
         dRateIsIncrement: coin.dRateIsIncrement,
         dRate: coin.dRate,
+        fully_diluted_valuation: coin.fully_diluted_valuation,
+        total_volume: coin.total_volume,
+        circulating_supply: coin.circulating_supply,
+        total_supply: coin.total_supply,
+        max_supply: coin.max_supply,
+        high_24h: coin.high_24h,
+        low_24h: coin.low_24h,
       });
     }
 

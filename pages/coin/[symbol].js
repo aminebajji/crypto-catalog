@@ -25,6 +25,13 @@ const CoinDetailPage = () => {
         marketCapValue: query.marketCapValue,
         largeImage: query.largeImage,
         price: query.price,
+        fullyDilutedValuation: query.fullyDilutedValuation,
+        totalVolume: query.totalVolume,
+        circulatingSupply: query.circulatingSupply,
+        totalSupply: query.totalSupply,
+        maxSupply: query.maxSupply,
+        high24h: query.high24h,
+        low24h: query.low24h,
       };
 
       setCoinData(coinData);

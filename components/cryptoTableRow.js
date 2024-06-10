@@ -16,15 +16,22 @@ const CryptoTableRow = ({
   starNum,
   coinName,
   coinIcon,
-  coinSymbol = "---",
-  price = "----",
-  hRate = "---",
-  dRate = "---",
+  coinSymbol,
+  price,
+  hRate,
+  dRate,
   hRateIsIncrement,
   dRateIsIncrement,
-  marketCapValue = "---",
-  volumeValue = "---",
+  marketCapValue,
+  volumeValue,
   largeImage,
+  fullyDilutedValuation,
+  totalVolume,
+  circulatingSupply,
+  totalSupply,
+  maxSupply,
+  low24h,
+  high24h,
 }) => {
   const graphImages = [
     "https://s3.coinmarketcap.com/generated/sparklines/web/7d/2781/52.svg",
@@ -61,6 +68,12 @@ const CryptoTableRow = ({
       volumeValue,
       largeImage,
       fullyDilutedValuation,
+      totalVolume,
+      circulatingSupply,
+      totalSupply,
+      maxSupply,
+      low24h,
+      high24h,
     };
 
     const query = new URLSearchParams(coinData).toString();
@@ -78,7 +91,13 @@ const CryptoTableRow = ({
   price = formatNum(price);
   dRate = formatNum(dRate);
   marketCapValue = formatNum(marketCapValue);
-
+  fullyDilutedValuation = formatNum(parseFloat(fullyDilutedValuation));
+  totalVolume = formatNum(parseFloat(totalVolume));
+  circulatingSupply = formatNum(parseFloat(circulatingSupply));
+  totalSupply = formatNum(parseFloat(totalSupply));
+  maxSupply = formatNum(parseFloat(maxSupply));
+  low24h = formatNum(parseFloat(low24h));
+  high24h = formatNum(parseFloat(high24h));
   return (
     <tr className={styles.tableRow}>
       <td className={styles.tableCell}>
