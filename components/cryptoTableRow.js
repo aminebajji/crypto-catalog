@@ -6,9 +6,10 @@ import { useRouter } from "next/router";
 import Info from "@/assets/svg/info";
 
 const styles = {
-  tableRow: `text-center border-b border-gray-800 text-[0.93rem]`,
-  flexContainer: `flex items-center`, // Flexbox container class for vertical alignment
-  tableCell: `px-4 py-2`, // consistent padding to table cells
+  tableRow: `bg-white border-b dark:bg-gray-800 dark:border-gray-700`,
+  flexContainer: `flex items-center`,
+  tableCell: `px-6 py-4 text-gray-900 dark:text-white`, // consistent padding to table cells
+  tableCellWithImage: `px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white cursor-pointer`,
 };
 
 const CryptoTableRow = ({
@@ -24,7 +25,6 @@ const CryptoTableRow = ({
   marketCapValue = "---",
   volumeValue = "---",
   largeImage,
-  fullyDilutedValuation,
 }) => {
   const graphImages = [
     "https://s3.coinmarketcap.com/generated/sparklines/web/7d/2781/52.svg",
@@ -40,9 +40,8 @@ const CryptoTableRow = ({
     "https://s3.coinmarketcap.com/generated/sparklines/web/7d/2781/2099.svg",
     "https://s3.coinmarketcap.com/generated/sparklines/web/7d/2781/7653.svg",
   ];
-
   const getRandomGraph = () => {
-    const rndInt = Math.floor(Math.random() * 10) + 1;
+    const rndInt = Math.floor(Math.random() * graphImages.length);
     return graphImages[rndInt];
   };
 
@@ -75,10 +74,11 @@ const CryptoTableRow = ({
   const formatNum = (num) => {
     return Number(num.toFixed(2)).toLocaleString();
   };
+
   price = formatNum(price);
   dRate = formatNum(dRate);
-  //fullyDilutedValuation = formatNum(fullyDilutedValuation);
   marketCapValue = formatNum(marketCapValue);
+
   return (
     <tr className={styles.tableRow}>
       <td className={styles.tableCell}>
@@ -88,7 +88,7 @@ const CryptoTableRow = ({
 
       {coinIcon && (
         <td
-          className={`${styles.tableCell} cursor-pointer`}
+          className={styles.tableCellWithImage}
           onClick={() => viewCoinDetails(coinSymbol)}
         >
           <div className={styles.flexContainer}>
@@ -98,7 +98,7 @@ const CryptoTableRow = ({
         </td>
       )}
 
-      <td className={`${styles.tableCell} cursor-pointer`}>
+      <td className={styles.tableCell}>
         <p>${price}</p>
       </td>
       <td className={styles.tableCell}>
@@ -110,7 +110,7 @@ const CryptoTableRow = ({
 
       <td className={styles.tableCell}>
         <div>
-          <p>{formatNum(volumeValue)}</p>
+          <p>${formatNum(volumeValue)}</p>
         </div>
       </td>
 
@@ -123,8 +123,6 @@ const CryptoTableRow = ({
       <td className={styles.tableCell}>
         <Image src={getRandomGraph()} width={150} height={60} alt="" />
       </td>
-
-      <td className={styles.tableCell}></td>
     </tr>
   );
 };

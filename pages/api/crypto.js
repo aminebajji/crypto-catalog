@@ -23,6 +23,7 @@ export default async function getCoins(req, res) {
         "https://assets.coingecko.com/coins/images/",
         ""
       )[0];
+      //console.log(coin.);
 
       coins.push({
         id: coin.id,
@@ -43,10 +44,8 @@ export default async function getCoins(req, res) {
         large_image: coin.image,
         dRateIsIncrement: coin.dRateIsIncrement,
         dRate: coin.dRate,
-        fullyDilutedValuation: coin.fully_diluted_valuation,
       });
     }
-    console.log("tete ", fullyDilutedValuation);
 
     return coins;
   } catch (error) {
