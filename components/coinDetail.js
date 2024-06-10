@@ -29,6 +29,17 @@ const CoinDetail = ({ coinData }) => {
     high24h,
     low24h,
   } = coinData;
+
+  // Calculate percentage for the progress bar width
+  const maxPrice = parseFloat(high24h.replace(/,/g, ""));
+  const minPrice = parseFloat(low24h.replace(/,/g, ""));
+  const priceFloat = parseFloat(price.replace(/,/g, ""));
+  const percentagePrice =
+    ((priceFloat - minPrice) / (maxPrice - minPrice)) * 100;
+  // Generate Tailwind CSS class for width based on percentage
+  const widthBar = "w-" + Math.round(percentagePrice);
+  console.log("hah", widthBar);
+
   return (
     <div className="coinDetail-section">
       <div className="detail-item-1">
@@ -59,9 +70,9 @@ const CoinDetail = ({ coinData }) => {
         </div>
         <div className="flex flex-col items-start">
           <div className="progress-container">
-            <div className="progress-bar"></div>
+            <div className={`progress-bar ${widthBar}`}></div>
           </div>
-          <div className="flex justify-between interval">
+          <div className={`flex justify-between interval`}>
             <div className="text-sm">${low24h}</div>
             <div className="text-sm">24h Range</div>
             <div className="text-sm">${high24h}</div>
