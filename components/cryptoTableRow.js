@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Star from "../assets/svg/star";
 import Rate from "./rate";
@@ -33,6 +33,7 @@ const CryptoTableRow = ({
   low24h,
   high24h,
 }) => {
+  const [starColor, setStarColor] = useState("none"); // State for star color
   const graphImages = [
     "https://s3.coinmarketcap.com/generated/sparklines/web/7d/2781/52.svg",
     "https://s3.coinmarketcap.com/generated/sparklines/web/7d/2781/1.svg",
@@ -47,6 +48,7 @@ const CryptoTableRow = ({
     "https://s3.coinmarketcap.com/generated/sparklines/web/7d/2781/2099.svg",
     "https://s3.coinmarketcap.com/generated/sparklines/web/7d/2781/7653.svg",
   ];
+
   const getRandomGraph = () => {
     const rndInt = Math.floor(Math.random() * graphImages.length);
     return graphImages[rndInt];
@@ -101,7 +103,12 @@ const CryptoTableRow = ({
   return (
     <tr className={styles.tableRow}>
       <td className={styles.tableCell}>
-        <Star color="none" />
+        <div
+          onClick={() => setStarColor("yellow")}
+          style={{ cursor: "pointer" }}
+        >
+          <Star color={starColor} />
+        </div>
       </td>
       <td className={styles.tableCell}>{starNum}</td>
 
