@@ -1,10 +1,10 @@
-const Star = () => {
+const Star = ({ color }) => {
   return (
     <svg
       width="20px"
       height="15px"
+      fill={color}
       viewBox="0 0 24 24"
-      fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path

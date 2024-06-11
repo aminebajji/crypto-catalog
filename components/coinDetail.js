@@ -84,32 +84,56 @@ const CoinDetail = ({ coinData }) => {
           </div>
         </div>
         <div className="detail-item-2 mt-4">
-          <div className="border-b py-2">
-            <div className="flex items-center">
-              <div>Market Cap</div>
-              <Info />
+          <div className="detail-item-2 mt-4 flex">
+            {/* Left group of elements */}
+            <div className="left-group flex flex-col mr-8">
+              <div className="border-b py-2 flex flex-col">
+                <div className="flex items-center">
+                  <div className="mr-2">Market Cap</div>
+                  <Info />
+                </div>
+                <div>${marketCapValue}</div>
+              </div>
+              <div className="border-b py-2 flex flex-col">
+                <div className="flex items-center">
+                  <div className="mr-2">Fully Diluted Valuation</div>
+                  <Info />
+                </div>
+                <div>${fullyDilutedValuation}</div>
+              </div>
+              <div className="border-b py-2 flex flex-col">
+                <div className="flex items-center">
+                  <div className="mr-2">24 Hour Trading Vol</div>
+                  <Info />
+                </div>
+                <div>${totalVolume}</div>
+              </div>
             </div>
-            <div>${marketCapValue}</div>
-          </div>
-          <div className="border-b py-2">
-            <div>Fully Diluted Valuation</div>
-            <div>${fullyDilutedValuation}</div>
-          </div>
-          <div className="border-b py-2">
-            <div>24 Hour Trading Vol</div>
-            <div>${totalVolume}</div>
-          </div>
-          <div className="border-b py-2">
-            <div>Circulating Supply</div>
-            <div>${circulatingSupply}</div>
-          </div>
-          <div className="border-b py-2">
-            <div>Total Supply</div>
-            <div>${totalSupply}</div>
-          </div>
-          <div className="border-b py-2">
-            <div>Max Supply</div>
-            <div>${maxSupply}</div>
+
+            {/* Right group of elements */}
+            <div className="right-group flex flex-col">
+              <div className="border-b py-2 flex flex-col">
+                <div className="flex items-center">
+                  <div className="mr-2">Circulating Supply</div>
+                  <Info />
+                </div>
+                <div>${circulatingSupply}</div>
+              </div>
+              <div className="border-b py-2 flex flex-col">
+                <div className="flex items-center">
+                  <div className="mr-2">Total Supply</div>
+                  <Info />
+                </div>
+                <div>${totalSupply}</div>
+              </div>
+              <div className="border-b py-2 flex flex-col">
+                <div className="flex items-center">
+                  <div className="mr-2">Max Supply</div>
+                  <Info />
+                </div>
+                <div>${maxSupply}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

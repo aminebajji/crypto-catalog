@@ -1,49 +1,21 @@
 const Share = () => {
   return (
     <svg
-      viewBox="0 0 24 24"
+      width="23px"
+      height="23px"
+      viewBox="0 -0.5 25 25"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      stroke="#e3e3e3"
-      width="15px"
-      height="15px"
     >
-      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-      <g
-        id="SVGRepo_tracerCarrier"
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M14.734 15.8974L19.22 12.1374C19.3971 11.9927 19.4998 11.7761 19.4998 11.5474C19.4998 11.3187 19.3971 11.1022 19.22 10.9574L14.734 7.19743C14.4947 6.9929 14.1598 6.94275 13.8711 7.06826C13.5824 7.19377 13.3906 7.47295 13.377 7.78743V9.27043C7.079 8.17943 5.5 13.8154 5.5 16.9974C6.961 14.5734 10.747 10.1794 13.377 13.8154V15.3024C13.3888 15.6178 13.5799 15.8987 13.8689 16.0254C14.158 16.1521 14.494 16.1024 14.734 15.8974Z"
+        stroke="#000000"
+        stroke-width="1.5"
         stroke-linecap="round"
         stroke-linejoin="round"
-      ></g>
-      <g id="SVGRepo_iconCarrier">
-        {" "}
-        <path
-          d="M9 12C9 13.3807 7.88071 14.5 6.5 14.5C5.11929 14.5 4 13.3807 4 12C4 10.6193 5.11929 9.5 6.5 9.5C7.88071 9.5 9 10.6193 9 12Z"
-          stroke="#e3e3e3"
-          stroke-width="1.5"
-        ></path>{" "}
-        <path
-          d="M14 6.5L9 10"
-          stroke="#e3e3e3"
-          stroke-width="1.5"
-          stroke-linecap="round"
-        ></path>{" "}
-        <path
-          d="M14 17.5L9 14"
-          stroke="#e3e3e3"
-          stroke-width="1.5"
-          stroke-linecap="round"
-        ></path>{" "}
-        <path
-          d="M19 18.5C19 19.8807 17.8807 21 16.5 21C15.1193 21 14 19.8807 14 18.5C14 17.1193 15.1193 16 16.5 16C17.8807 16 19 17.1193 19 18.5Z"
-          stroke="#e3e3e3"
-          stroke-width="1.5"
-        ></path>{" "}
-        <path
-          d="M19 5.5C19 6.88071 17.8807 8 16.5 8C15.1193 8 14 6.88071 14 5.5C14 4.11929 15.1193 3 16.5 3C17.8807 3 19 4.11929 19 5.5Z"
-          stroke="#e3e3e3"
-          stroke-width="1.5"
-        ></path>{" "}
-      </g>
+      />
     </svg>
   );
 };

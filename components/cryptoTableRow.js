@@ -101,7 +101,7 @@ const CryptoTableRow = ({
   return (
     <tr className={styles.tableRow}>
       <td className={styles.tableCell}>
-        <Star />
+        <Star color="none" />
       </td>
       <td className={styles.tableCell}>{starNum}</td>
 
