@@ -26,7 +26,7 @@ const CryptoTable = () => {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching crypto data:", error);
-        setLoading(false); // Set loading to false even if there's an error
+        setLoading(false);
       }
     };
 

@@ -29,6 +29,7 @@ const CoinDetail = ({ coinData }) => {
     high24h,
     low24h,
   } = coinData;
+  console.log("hah", low24h);
 
   // Calculate percentage for the progress bar width
   const maxPrice = parseFloat(high24h.replace(/,/g, ""));
@@ -38,7 +39,6 @@ const CoinDetail = ({ coinData }) => {
     ((priceFloat - minPrice) / (maxPrice - minPrice)) * 100;
   // Generate Tailwind CSS class for width based on percentage
   const widthBar = "w-" + Math.round(percentagePrice);
-  console.log("hah", widthBar);
 
   return (
     <div className="coinDetail-section">
