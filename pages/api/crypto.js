@@ -50,8 +50,8 @@ export default async function getCoins(req, res) {
         circulating_supply: coin.circulating_supply,
         total_supply: coin.total_supply,
         max_supply: coin.max_supply,
-        high_24h: high24h,
-        low_24h: low24h,
+        high_24h: coin.high_24h,
+        low_24h: coin.low_24h,
       });
     }
 

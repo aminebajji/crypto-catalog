@@ -4,6 +4,7 @@
 
 .progress-container {
   width: 400px;
+  height: 6px;
   background-color: #ddd;
   border-radius: 25px;
   overflow: hidden;
