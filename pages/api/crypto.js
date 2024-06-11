@@ -52,6 +52,7 @@ export default async function getCoins(req, res) {
         max_supply: coin.max_supply,
         high_24h: coin.high_24h,
         low_24h: coin.low_24h,
+        prices_array: coin.sparkline_in_7d.price,
       });
     }
 

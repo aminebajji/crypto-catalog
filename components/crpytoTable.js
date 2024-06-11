@@ -43,7 +43,7 @@ const CryptoTable = () => {
         if (filterField === "id") {
           return coin.id.toString().includes(filterValue);
         } else if (filterField === "code") {
-          return coin.code.toLowerCase().includes(filterValue.toLowerCase());
+          return coin.symbol.toLowerCase().includes(filterValue.toLowerCase());
         } else if (filterField === "name") {
           return coin.name.toLowerCase().includes(filterValue.toLowerCase());
         } else if (filterField === "type") {
@@ -199,6 +199,7 @@ const CryptoTable = () => {
                       maxSupply={coin.max_supply}
                       low24h={coin.low_24h}
                       high24h={coin.high_24h}
+                      prices={coin.prices_array}
                     />
                   ))
               ) : (

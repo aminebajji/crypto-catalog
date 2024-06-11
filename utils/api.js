@@ -4,7 +4,7 @@ export async function fetchCryptoData(
   retries = 10,
   delay = 10000
 ) {
-  const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=${perPage}&page=${page}&sparkline=false&price_change_percentage=1h%2C24h%2C7d`;
+  const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=${perPage}&page=${page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d`;
 
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
