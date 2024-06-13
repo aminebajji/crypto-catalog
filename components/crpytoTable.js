@@ -19,7 +19,7 @@ const CryptoTable = () => {
   const [searchText, setSearchText] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [filterField, setFilterField] = useState("id");
+  const [filterField, setFilterField] = useState("");
   const [filterValue, setFilterValue] = useState("");
   const [totalPages, setTotalPages] = useState(1);
 
@@ -55,14 +55,15 @@ const CryptoTable = () => {
     }
 
     if (filterValue) {
+      const lowerFilterField = filterField.toLowerCase();
       newFilteredData = newFilteredData.filter((coin) => {
-        if (filterField === "id") {
+        if (lowerFilterField === "id") {
           return coin.id.toString().includes(filterValue);
-        } else if (filterField === "code") {
+        } else if (lowerFilterField === "code") {
           return coin.symbol.toLowerCase().includes(filterValue.toLowerCase());
-        } else if (filterField === "name") {
+        } else if (lowerFilterField === "name") {
           return coin.name.toLowerCase().includes(filterValue.toLowerCase());
-        } else if (filterField === "type") {
+        } else if (lowerFilterField === "type") {
           return coin.type.toLowerCase().includes(filterValue.toLowerCase());
         }
         return true;
@@ -86,17 +87,57 @@ const CryptoTable = () => {
 
   const handleResetFilters = () => {
     setSearchText("");
-    setFilterField("id");
+    setFilterField("");
     setFilterValue("");
+    fetchData(); // Refetch data after resetting filters
   };
 
   const handleFilterChange = (value) => {
+    if (value && typeof value === "object" && value.target) {
+      value = value.target.value;
+    }
     setFilterField(value);
-    setFilterValue(""); // Reset filter value when filter field changes
+    setFilterValue("");
   };
 
   const handleFilterValueChange = (e) => {
     setFilterValue(e.target.value);
+  };
+
+  const renderFilterValueInput = () => {
+    if (!filterField) {
+      return null; // Render nothing if no filter field is selected
+    }
+
+    let placeholderText = "";
+    console.log("hahwa", filterField);
+
+    switch (filterField.toLowerCase()) {
+      case "id":
+        placeholderText = "Enter Id";
+        break;
+      case "name":
+        placeholderText = "Enter Name";
+        break;
+      case "code":
+        placeholderText = "Enter Code";
+        break;
+      case "type":
+        placeholderText = "Enter Type";
+        break;
+      default:
+        placeholderText = "Enter Value";
+    }
+
+    return (
+      <Input
+        label="Value"
+        placeholder={placeholderText}
+        className="max-w-[220px]"
+        value={filterValue}
+        onChange={handleFilterValueChange}
+      />
+    );
   };
 
   if (loading) {
@@ -150,13 +191,7 @@ const CryptoTable = () => {
                 </AutocompleteItem>
               ))}
             </Autocomplete>
-            <Input
-              label="Value"
-              placeholder="Enter the value"
-              className="max-w-[220px]"
-              value={filterValue}
-              onChange={handleFilterValueChange}
-            />
+            {renderFilterValueInput()}
             <Button onClick={handleResetFilters}>Reset</Button>
           </div>
         </div>
@@ -177,6 +212,7 @@ const CryptoTable = () => {
             <option value="15">15</option>
             <option value="20">20</option>
             <option value="50">50</option>
+            <option value="100">100</option>
           </select>
         </label>
       </div>
