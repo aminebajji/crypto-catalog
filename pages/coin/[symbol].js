@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import CoinDetail from "../../components/coinDetail";
 import Header from "../../components/header";
+import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
 
 const CoinDetailPage = () => {
   const router = useRouter();
@@ -46,6 +47,12 @@ const CoinDetailPage = () => {
     <div className="min-h-screen text-black">
       <div className="container mx-auto px-4">
         <Header />
+        <div className="flex flex-col flex-wrap gap-4 pb-2">
+          <Breadcrumbs variant="solid">
+            <BreadcrumbItem href="/">Home</BreadcrumbItem>
+            <BreadcrumbItem>Coin Detail</BreadcrumbItem>
+          </Breadcrumbs>
+        </div>
         <CoinDetail coinData={coinData} />
       </div>
     </div>
