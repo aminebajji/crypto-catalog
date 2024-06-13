@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import TableHeader from "./cryptoTableHeader";
 import getCoins from "../pages/api/crypto";
 import CryptoTableRow from "./cryptoTableRow";
@@ -14,91 +14,35 @@ import SearchIcon from "@/assets/svg/search";
 
 const CryptoTable = () => {
   const [cryptoData, setCryptoData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [filterField, setFilterField] = useState("");
   const [filterValue, setFilterValue] = useState("");
-  const [totalPages, setTotalPages] = useState(1);
-  const [allCoins, setAllCoins] = useState([]);
+  const [totalPages, setTotalPages] = useState(1); // To keep track of the total number of pages
 
-  const coinsPerPage = 100; // Fixed number of coins to keep in memory
-
-  useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        const data = await getCoins({
-          query: { page: 1, perPage: coinsPerPage },
-        });
-        setAllCoins(data.coins);
-        setCryptoData(data.coins.slice(0, rowsPerPage));
-        setTotalPages(Math.ceil(data.coins.length / rowsPerPage));
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching initial crypto data:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchInitialData();
-  }, []);
+  const fetchData = async (page, rowsPerPage) => {
+    setLoading(true);
+    try {
+      const data = await getCoins({
+        query: { page, perPage: rowsPerPage },
+      });
+      setCryptoData(data.coins);
+      setTotalPages(data.totalPages); // Assuming API returns total pages
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching crypto data:", error);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPageData = async () => {
-      const currentPage = Math.ceil(allCoins.length / rowsPerPage) + 1;
-      if (page >= currentPage) {
-        setLoading(true);
-        try {
-          const data = await getCoins({
-            query: { page, perPage: coinsPerPage },
-          });
-          setAllCoins((prevCoins) => [...prevCoins, ...data.coins]);
-          setLoading(false);
-        } catch (error) {
-          console.error("Error fetching crypto data:", error);
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchPageData();
-  }, [page, rowsPerPage, allCoins.length]);
-
-  useEffect(() => {
-    handleSearch();
-  }, [searchText, filterField, filterValue, allCoins]);
+    fetchData(page, rowsPerPage);
+  }, [page, rowsPerPage]);
 
   const handleSearch = () => {
-    let newFilteredData = allCoins;
-
-    if (searchText) {
-      newFilteredData = newFilteredData.filter(
-        (coin) =>
-          coin.name.toLowerCase().includes(searchText.toLowerCase()) ||
-          coin.symbol.toLowerCase().includes(searchText.toLowerCase())
-      );
-    }
-
-    if (filterValue) {
-      const lowerFilterField = filterField.toLowerCase();
-      newFilteredData = newFilteredData.filter((coin) => {
-        if (lowerFilterField === "id") {
-          return coin.id.toString().includes(filterValue);
-        } else if (lowerFilterField === "code") {
-          return coin.symbol.toLowerCase().includes(filterValue.toLowerCase());
-        } else if (lowerFilterField === "name") {
-          return coin.name.toLowerCase().includes(filterValue.toLowerCase());
-        } else if (lowerFilterField === "type") {
-          return coin.type.toLowerCase().includes(filterValue.toLowerCase());
-        }
-        return true;
-      });
-    }
-
-    setFilteredData(newFilteredData.slice(0, rowsPerPage));
-    setTotalPages(Math.ceil(newFilteredData.length / rowsPerPage));
+    fetchData(page, rowsPerPage);
   };
 
   const handlePageChange = (newPage) => {
@@ -116,8 +60,7 @@ const CryptoTable = () => {
     setFilterField("");
     setFilterValue("");
     setPage(1);
-    setCryptoData(allCoins.slice(0, rowsPerPage));
-    setTotalPages(Math.ceil(allCoins.length / rowsPerPage));
+    fetchData(1, rowsPerPage);
   };
 
   const handleFilterChange = (value) => {
@@ -166,11 +109,29 @@ const CryptoTable = () => {
     );
   };
 
-  const paginatedData = useMemo(() => {
-    const startIndex = (page - 1) * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage;
-    return filteredData.slice(startIndex, endIndex);
-  }, [filteredData, page, rowsPerPage]);
+  const filteredData = cryptoData.filter((coin) => {
+    if (searchText) {
+      return (
+        coin.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        coin.symbol.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+
+    if (filterValue) {
+      const lowerFilterField = filterField.toLowerCase();
+      if (lowerFilterField === "id") {
+        return coin.id.toString().includes(filterValue);
+      } else if (lowerFilterField === "code") {
+        return coin.symbol.toLowerCase().includes(filterValue.toLowerCase());
+      } else if (lowerFilterField === "name") {
+        return coin.name.toLowerCase().includes(filterValue.toLowerCase());
+      } else if (lowerFilterField === "type") {
+        return coin.type.toLowerCase().includes(filterValue.toLowerCase());
+      }
+    }
+
+    return true;
+  });
 
   const filterOptions = [
     { value: "id", label: "Id" },
@@ -194,7 +155,7 @@ const CryptoTable = () => {
           <Input
             isClearable
             classNames={{
-              base: "w-full sm:max-w-[60%] pb-2",
+              base: "w-full sm:max-w-[40%] pb-2",
               inputWrapper: "border-2",
             }}
             placeholder="Search for a coin"
@@ -226,7 +187,7 @@ const CryptoTable = () => {
       </div>
       <div className="flex justify-between items-center pb-2">
         <span className="text-default-400 text-small">
-          Total {allCoins.length} coins
+          Total {cryptoData.length} coins
         </span>
         <label className="flex items-center text-default-400 text-small">
           Rows per page:
@@ -249,8 +210,8 @@ const CryptoTable = () => {
           <table className="w-full text-orange">
             <TableHeader />
             <tbody>
-              {paginatedData.length > 0 ? (
-                paginatedData.map((coin, index) => (
+              {filteredData.length > 0 ? (
+                filteredData.map((coin, index) => (
                   <CryptoTableRow
                     key={index}
                     starNum={coin.rank}
