@@ -102,7 +102,7 @@ const CryptoTableRow = ({
         >
           <div className={styles.flexContainer}>
             <Image src={coinIcon} alt={coinName} width={20} height={20} />
-            <p>{coinName}</p>
+            <p className="pl-3">{coinName}</p>
           </div>
         </td>
       )}

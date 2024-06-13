@@ -2,11 +2,19 @@ import React, { useEffect, useState } from "react";
 import TableHeader from "./cryptoTableHeader";
 import getCoins from "../pages/api/crypto";
 import CryptoTableRow from "./cryptoTableRow";
-import { Pagination, Input, Spinner } from "@nextui-org/react";
+import {
+  Pagination,
+  Input,
+  Spinner,
+  Autocomplete,
+  AutocompleteItem,
+  Button,
+} from "@nextui-org/react";
 import SearchIcon from "@/assets/svg/search";
 
 const CryptoTable = () => {
   const [cryptoData, setCryptoData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [page, setPage] = useState(1);
@@ -31,11 +39,15 @@ const CryptoTable = () => {
     fetchData();
   }, [page, rowsPerPage]);
 
+  useEffect(() => {
+    handleSearch();
+  }, [searchText, filterField, filterValue, cryptoData]);
+
   const handleSearch = () => {
-    let filteredData = cryptoData;
+    let newFilteredData = cryptoData;
 
     if (searchText) {
-      filteredData = filteredData.filter(
+      newFilteredData = newFilteredData.filter(
         (coin) =>
           coin.name.toLowerCase().includes(searchText.toLowerCase()) ||
           coin.symbol.toLowerCase().includes(searchText.toLowerCase())
@@ -43,7 +55,7 @@ const CryptoTable = () => {
     }
 
     if (filterValue) {
-      filteredData = filteredData.filter((coin) => {
+      newFilteredData = newFilteredData.filter((coin) => {
         if (filterField === "id") {
           return coin.id.toString().includes(filterValue);
         } else if (filterField === "code") {
@@ -57,7 +69,7 @@ const CryptoTable = () => {
       });
     }
 
-    return filteredData;
+    setFilteredData(newFilteredData);
   };
 
   const handlePageChange = (newPage) => {
@@ -66,7 +78,8 @@ const CryptoTable = () => {
     }
   };
 
-  const handleRowsPerPageChange = (newRowsPerPage) => {
+  const handleRowsPerPageChange = (e) => {
+    const newRowsPerPage = e.target.value;
     setRowsPerPage(Number(newRowsPerPage));
     setPage(1); // Reset page to 1 when rows per page changes
   };
@@ -75,7 +88,15 @@ const CryptoTable = () => {
     setSearchText("");
     setFilterField("id");
     setFilterValue("");
-    fetchData(); // Refetch data after resetting filters
+  };
+
+  const handleFilterChange = (value) => {
+    setFilterField(value);
+    setFilterValue(""); // Reset filter value when filter field changes
+  };
+
+  const handleFilterValueChange = (e) => {
+    setFilterValue(e.target.value);
   };
 
   if (loading) {
@@ -86,11 +107,16 @@ const CryptoTable = () => {
     );
   }
 
-  const filteredData = handleSearch();
   const paginatedData = filteredData.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
+  const filterOptions = [
+    { value: "id", label: "Id" },
+    { value: "name", label: "Name" },
+    { value: "code", label: "Code" },
+    { value: "type", label: "Type" },
+  ];
 
   return (
     <>
@@ -99,73 +125,60 @@ const CryptoTable = () => {
           <Input
             isClearable
             classNames={{
-              base: "w-full sm:max-w-[100%]",
-              inputWrapper: "border-1",
+              base: "w-full sm:max-w-[40%] pb-2",
+              inputWrapper: "border-2",
             }}
             placeholder="Search for a coin"
             size="sm"
             startContent={<SearchIcon className="text-default-300" />}
-            value={filterValue}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
             variant="bordered"
           />
-        </div>
-        <div className="flex items-center space-x-2 pt-1">
-          <select
-            value={filterField}
-            onChange={(e) => setFilterField(e.target.value)}
-            className="block py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
-          >
-            <option value="id">ID</option>
-            <option value="code">Code</option>
-            <option value="name">Name</option>
-            <option value="type">Type</option>
-          </select>
-          <input
-            type="text"
-            placeholder={`Filter by ${filterField}`}
-            value={filterValue}
-            onChange={(e) => setFilterValue(e.target.value)}
-            className="block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
-          />
-          <button
-            onClick={handleResetFilters}
-            className="flex items-center justify-center p-2 text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="#000000"
-              width={15}
-              height={15}
+          <div className="flex items-center space-x-2 pt-1">
+            <Autocomplete
+              label="Filter by"
+              placeholder="Select filter criteria"
+              className="max-w-xs"
+              onSelect={handleFilterChange}
+              value={filterField}
+              disableSelectorIconRotation
             >
-              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              ></g>
-              <g id="SVGRepo_iconCarrier">
-                <path d="M22.719 12A10.719 10.719 0 0 1 1.28 12h.838a9.916 9.916 0 1 0 1.373-5H8v1H2V2h1v4.2A10.71 10.71 0 0 1 22.719 12z"></path>
-                <path fill="none" d="M0 0h24v24H0z"></path>
-              </g>
-            </svg>
-          </button>
+              {filterOptions.map((option) => (
+                <AutocompleteItem key={option.value} value={option.value}>
+                  {option.label}
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
+            <Input
+              label="Value"
+              placeholder="Enter the value"
+              className="max-w-[220px]"
+              value={filterValue}
+              onChange={handleFilterValueChange}
+            />
+            <Button onClick={handleResetFilters}>Reset</Button>
+          </div>
         </div>
       </div>
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center space-x-2">
+      <div className="flex justify-between items-center pb-2">
+        <span className="text-default-400 text-small">
+          Total {cryptoData.length} users
+        </span>
+        <label className="flex items-center text-default-400 text-small">
+          Rows per page:
           <select
-            id="rows-per-page"
+            className="bg-transparent outline-none text-default-400 text-small"
             value={rowsPerPage}
-            onChange={(e) => handleRowsPerPageChange(e.target.value)}
-            className="block py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
+            onChange={handleRowsPerPageChange}
           >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
           </select>
-        </div>
+        </label>
       </div>
       <div>
         <div className="mx-auto max-w-screen-2xl inline-block min-w-full shadow rounded-lg overflow-hidden">
@@ -214,11 +227,10 @@ const CryptoTable = () => {
             cursor: "bg-foreground text-background",
           }}
           color="default"
-          //isDisabled={hasSearchFilter}
           page={page}
           total={totalPages}
           variant="light"
-          onChange={setPage}
+          onChange={handlePageChange}
         />
       </div>
     </>
