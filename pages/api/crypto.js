@@ -57,8 +57,8 @@ export default async function getCoins(req, res) {
         prices_array: coin.sparkline_in_7d.price,
       });
     }
-
-    return coins;
+    const response = { coins, totalPages };
+    return response;
   } catch (error) {
     console.error(error);
   }
