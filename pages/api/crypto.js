@@ -7,8 +7,7 @@ export default async function getCoins(req, res) {
     const data = await fetchCryptoData(page, perPage);
     const list_data = await fetchCryptoData();
     const totalCoins = list_data.length;
-    const totalPages = parseInt(totalCoins / perPage);
-    console.log("hahwa", totalPages);
+    const totalPages = parseInt(totalCoins / perPage) + 1;
     const coins = [];
 
     for (let i = 0; i < data.length; i++) {
