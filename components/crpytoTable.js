@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import TableHeader from "./cryptoTableHeader";
 import getCoins from "../pages/api/crypto";
 import CryptoTableRow from "./cryptoTableRow";
@@ -22,29 +22,56 @@ const CryptoTable = () => {
   const [filterField, setFilterField] = useState("");
   const [filterValue, setFilterValue] = useState("");
   const [totalPages, setTotalPages] = useState(1);
+  const [allCoins, setAllCoins] = useState([]);
 
-  const fetchData = async () => {
-    try {
-      const data = await getCoins({ query: { page, perPage: rowsPerPage } });
-      setCryptoData(data.coins);
-      setTotalPages(data.totalPages);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching crypto data:", error);
-      setLoading(false);
-    }
-  };
+  const coinsPerPage = 100; // Fixed number of coins to keep in memory
 
   useEffect(() => {
-    fetchData();
-  }, [page, rowsPerPage]);
+    const fetchInitialData = async () => {
+      try {
+        const data = await getCoins({
+          query: { page: 1, perPage: coinsPerPage },
+        });
+        setAllCoins(data.coins);
+        setCryptoData(data.coins.slice(0, rowsPerPage));
+        setTotalPages(Math.ceil(data.coins.length / rowsPerPage));
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching initial crypto data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchInitialData();
+  }, []);
+
+  useEffect(() => {
+    const fetchPageData = async () => {
+      const currentPage = Math.ceil(allCoins.length / rowsPerPage) + 1;
+      if (page >= currentPage) {
+        setLoading(true);
+        try {
+          const data = await getCoins({
+            query: { page, perPage: coinsPerPage },
+          });
+          setAllCoins((prevCoins) => [...prevCoins, ...data.coins]);
+          setLoading(false);
+        } catch (error) {
+          console.error("Error fetching crypto data:", error);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchPageData();
+  }, [page, rowsPerPage, allCoins.length]);
 
   useEffect(() => {
     handleSearch();
-  }, [searchText, filterField, filterValue, cryptoData]);
+  }, [searchText, filterField, filterValue, allCoins]);
 
   const handleSearch = () => {
-    let newFilteredData = cryptoData;
+    let newFilteredData = allCoins;
 
     if (searchText) {
       newFilteredData = newFilteredData.filter(
@@ -70,18 +97,17 @@ const CryptoTable = () => {
       });
     }
 
-    setFilteredData(newFilteredData);
+    setFilteredData(newFilteredData.slice(0, rowsPerPage));
+    setTotalPages(Math.ceil(newFilteredData.length / rowsPerPage));
   };
 
   const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages && newPage !== page) {
-      setPage(newPage);
-    }
+    setPage(newPage);
   };
 
   const handleRowsPerPageChange = (e) => {
-    const newRowsPerPage = e.target.value;
-    setRowsPerPage(Number(newRowsPerPage));
+    const newRowsPerPage = Number(e.target.value);
+    setRowsPerPage(newRowsPerPage);
     setPage(1); // Reset page to 1 when rows per page changes
   };
 
@@ -89,7 +115,9 @@ const CryptoTable = () => {
     setSearchText("");
     setFilterField("");
     setFilterValue("");
-    fetchData(); // Refetch data after resetting filters
+    setPage(1);
+    setCryptoData(allCoins.slice(0, rowsPerPage));
+    setTotalPages(Math.ceil(allCoins.length / rowsPerPage));
   };
 
   const handleFilterChange = (value) => {
@@ -110,8 +138,6 @@ const CryptoTable = () => {
     }
 
     let placeholderText = "";
-    console.log("hahwa", filterField);
-
     switch (filterField.toLowerCase()) {
       case "id":
         placeholderText = "Enter Id";
@@ -140,6 +166,19 @@ const CryptoTable = () => {
     );
   };
 
+  const paginatedData = useMemo(() => {
+    const startIndex = (page - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    return filteredData.slice(startIndex, endIndex);
+  }, [filteredData, page, rowsPerPage]);
+
+  const filterOptions = [
+    { value: "id", label: "Id" },
+    { value: "name", label: "Name" },
+    { value: "code", label: "Code" },
+    { value: "type", label: "Type" },
+  ];
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -148,17 +187,6 @@ const CryptoTable = () => {
     );
   }
 
-  const paginatedData = filteredData.slice(
-    (page - 1) * rowsPerPage,
-    page * rowsPerPage
-  );
-  const filterOptions = [
-    { value: "id", label: "Id" },
-    { value: "name", label: "Name" },
-    { value: "code", label: "Code" },
-    { value: "type", label: "Type" },
-  ];
-
   return (
     <>
       <div className="pb-4 bg-white dark:bg-gray-900 flex items-center space-x-2">
@@ -166,7 +194,7 @@ const CryptoTable = () => {
           <Input
             isClearable
             classNames={{
-              base: "w-full sm:max-w-[40%] pb-2",
+              base: "w-full sm:max-w-[60%] pb-2",
               inputWrapper: "border-2",
             }}
             placeholder="Search for a coin"
@@ -198,7 +226,7 @@ const CryptoTable = () => {
       </div>
       <div className="flex justify-between items-center pb-2">
         <span className="text-default-400 text-small">
-          Total {cryptoData.length} users
+          Total {allCoins.length} coins
         </span>
         <label className="flex items-center text-default-400 text-small">
           Rows per page:
