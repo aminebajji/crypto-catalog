@@ -12,7 +12,7 @@ const ChartLine = ({ data }) => {
   return (
     <LineChart
       width={140}
-      height={40}
+      height={35}
       data={data.map((value, index) => ({ name: index, value: value }))}
     >
       <Line
