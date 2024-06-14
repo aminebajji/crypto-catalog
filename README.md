@@ -1,3 +1,21 @@
+## Task 2: Algorithmic
+
+### Python:
+
+```python
+for i in range(1, 101):
+    output = ""
+    if i % 3 == 0:
+        output += "Hello"
+    if i % 5 == 0:
+        output += "World"
+    if i % 7 == 0:
+        output += "Yoo"
+    print(output if output else i, end=", ")
+
+
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
