@@ -1,0 +1,16 @@
+{
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node",
+      "config": {
+        "pnpm": true
+      }
+    }
+  ],
+  "settings": {
+    "pnpm": {
+      "frozen-lockfile": false
+    }
+  }
+}
