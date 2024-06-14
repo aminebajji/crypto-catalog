@@ -29,8 +29,7 @@ const CryptoTable = () => {
         query: { page, perPage: rowsPerPage },
       });
       setCryptoData(data.coins);
-      console.log(data.totalPages);
-      setTotalPages(data.totalPages); // Assuming API returns total pages
+      setTotalPages(data.totalPages);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching crypto data:", error);
@@ -63,7 +62,7 @@ const CryptoTable = () => {
     setPage(1);
     fetchData(1, rowsPerPage);
   };
-  console.log(cryptoData.totalPages);
+  //(cryptoData.totalPages);
   const handleFilterChange = (value) => {
     if (value && typeof value === "object" && value.target) {
       value = value.target.value;

@@ -5,9 +5,9 @@ export default async function getCoins(req, res) {
 
   try {
     const data = await fetchCryptoData(page, perPage);
-    const list_data = await fetchCryptoData();
-    const totalCoins = list_data.length;
-    const totalPages = parseInt(totalCoins / perPage) + 1;
+    //const list_data = await fetchCryptoData();
+    const totalCoins = 1000;
+    const totalPages = parseInt(totalCoins / perPage);
     const coins = [];
 
     for (let i = 0; i < data.length; i++) {
@@ -57,7 +57,6 @@ export default async function getCoins(req, res) {
         prices_array: coin.sparkline_in_7d.price,
       });
     }
-    console.log("hada", totalCoins);
     const response = { coins, totalPages };
     return response;
   } catch (error) {
