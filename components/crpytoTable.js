@@ -29,6 +29,7 @@ const CryptoTable = () => {
         query: { page, perPage: rowsPerPage },
       });
       setCryptoData(data.coins);
+      console.log(data.totalPages);
       setTotalPages(data.totalPages); // Assuming API returns total pages
       setLoading(false);
     } catch (error) {
@@ -62,7 +63,7 @@ const CryptoTable = () => {
     setPage(1);
     fetchData(1, rowsPerPage);
   };
-
+  console.log(cryptoData.totalPages);
   const handleFilterChange = (value) => {
     if (value && typeof value === "object" && value.target) {
       value = value.target.value;
@@ -155,7 +156,7 @@ const CryptoTable = () => {
           <Input
             isClearable
             classNames={{
-              base: "w-full sm:max-w-[40%] pb-2",
+              base: "w-full sm:max-w-[60%] pb-2",
               inputWrapper: "border-2",
             }}
             placeholder="Search for a coin"
